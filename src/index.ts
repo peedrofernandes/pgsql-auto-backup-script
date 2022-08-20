@@ -4,14 +4,8 @@ dotenv.config();
 import { OAuth2Client } from "google-auth-library";
 
 import { google } from "googleapis";
-
-type CredentialsType = {
-  client_id: string,
-  client_secret: string,
-  refresh_token: string,
-  redirect_uri: string,
-  token_uri: string
-}
+import { CredentialsType } from "./types";
+import { getAccessToken } from "./handlers/getAccessToken";
 
 const credentials: CredentialsType = {
   client_id: process.env.CLIENT_ID || "",
@@ -21,9 +15,26 @@ const credentials: CredentialsType = {
   token_uri: process.env.TOKEN_URI || ""
 }
 
-// function authorize({ clientId, clientSecret, refreshToken, redirectUri }: credentialsType): OAuth2Client {
-//   const oAuth2Client = new google.auth.OAuth2({ clientId, clientSecret, redirectUri });
-//   oAuth2Client.setCredentials({ refresh_token: refreshToken });
+async function authorize(credentials: CredentialsType): Promise<OAuth2Client> {
+  const {
+    client_id,
+    client_secret,
+    refresh_token,
+    redirect_uri,
+    token_uri
+  } = credentials;
 
-//   return oAuth2Client;
-// }
+  const oAuth2Client = new google.auth.OAuth2({
+    clientId: client_id,
+    clientSecret: client_secret,
+    redirectUri: redirect_uri
+  });
+
+  const refreshTokenResponse = await getAccessToken(credentials);
+  const { access_token } = refreshTokenResponse?.data;
+
+  oAuth2Client.setCredentials({ access_token });
+
+  return oAuth2Client;
+}
+

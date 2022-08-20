@@ -29,7 +29,7 @@ export async function getAccessToken(credentials: CredentialsType) {
       redirect_uri
     });
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error(`It was not possible to get the access token using the refresh token! ${error}`);
   }
