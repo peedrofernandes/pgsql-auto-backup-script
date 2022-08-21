@@ -1,7 +1,7 @@
-import type { CredentialsType } from "../types";
+import type { CredentialsType } from "./types";
 import axios from "axios";
 
-export async function getAccessToken(credentials: CredentialsType) {
+async function getAccessToken(credentials: CredentialsType) {
   const {
     client_id,
     client_secret,
@@ -34,4 +34,6 @@ export async function getAccessToken(credentials: CredentialsType) {
     console.error(`It was not possible to get the access token using the refresh token! ${error}`);
   }
 }
+
+export default getAccessToken;
 
