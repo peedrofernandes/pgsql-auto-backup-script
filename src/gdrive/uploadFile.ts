@@ -1,11 +1,9 @@
 import { OAuth2Client } from "google-auth-library";
-import { google } from "googleapis";
+import { drive_v3, google } from "googleapis";
 import fs from "fs";
 import path from "path";
 
-async function uploadFile(oAuth2Client: OAuth2Client, filePath: string, parentId: string) {
-  const drive = google.drive({ version: "v3", auth: oAuth2Client });
-
+async function uploadFile(drive: drive_v3.Drive, filePath: string, parentId: string) {
   try {
     const res = await drive.files.create({
       media: {
